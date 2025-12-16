@@ -1,4 +1,12 @@
+@import "tailwindcss";
+
 body {
   background-color: rgb(0, 0, 0);
   background-size: cover;
+}
+* {
+  color: blanchedalmond;
+}
+p {
+  display: inline;
 }
