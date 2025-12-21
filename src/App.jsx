@@ -1,13 +1,23 @@
 import React from "react";
 import axios from "axios";
 import CircularIndeterminate from "./components/CircularIndeterminate";
-
+import SearchBar from "./components/SearchBar";
+import { MovieContext } from "./userContext/Globalvariables";
+import { useContext } from "react";
 import "./App.css";
 import { useState, useEffect } from "react";
 import MovieCard from "./components/MovieCard";
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const API_BASE_URL = "https://api.themoviedb.org/3";
+// const options = {
+//   method: "GET",
+//   headers: {
+//     accept: "application/json",
+//     Authorization: `Bearer ${API_KEY}`,
+//   },
+// };
+
 const options = {
   method: "GET",
   headers: {
@@ -16,15 +26,24 @@ const options = {
   },
 };
 
-const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+const url =
+  "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc";
+const endpoint = `${API_BASE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc`;
 
 const App = () => {
-  const [errorMsg, setErrorMsg] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setisLoading] = useState(false);
+  const {
+    errorMsg,
+    setErrorMsg,
+    movies,
+    setMovies,
+    isLoading,
+    setIsLoading,
+    searchParams,
+    setSearchParams,
+  } = useContext(MovieContext);
 
   const fetchMovies = async () => {
-    setisLoading(true);
+    setIsLoading(true);
     try {
       const response = await axios.get(endpoint, options);
       const { data } = response;
@@ -34,7 +53,7 @@ const App = () => {
       setErrorMsg("Unable to fetch movies. Please try again later :(");
       console.error(error);
     } finally {
-      setisLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -50,6 +69,8 @@ const App = () => {
         </div>
       </header>
       <section>
+        <SearchBar />
+
         <div>Movies list</div>
         {isLoading ? (
           <CircularIndeterminate />
@@ -58,9 +79,15 @@ const App = () => {
         ) : (
           <div>
             <ul className="grid grid-cols-4 border gap-4">
-              {movies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
-              ))}
+              {movies.length > 0 ? (
+                movies.map((movie) => (
+                  <MovieCard key={movie.id} movie={movie} />
+                ))
+              ) : (
+                <div className="border w-full flex flex-col text-shadow-red-800">
+                  Couldn't find the movie :(
+                </div>
+              )}
             </ul>
           </div>
         )}
