@@ -4,9 +4,10 @@ import CircularIndeterminate from "./components/CircularIndeterminate";
 import SearchBar from "./components/SearchBar";
 import { MovieContext } from "./userContext/Globalvariables";
 import { useContext } from "react";
-import "./App.css";
 import { useState, useEffect } from "react";
 import MovieCard from "./components/MovieCard";
+import { Header } from "./components/Header";
+import HeroSlide from "./components/HeroSlide";
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const API_BASE_URL = "https://api.themoviedb.org/3";
@@ -63,11 +64,8 @@ const App = () => {
 
   return (
     <main>
-      <header>
-        <div className="flex flex-col items-center border h1 text-9xl h-fit w-full my-2">
-          Header
-        </div>
-      </header>
+      <Header />
+      <HeroSlide />
       <section>
         <SearchBar />
 
