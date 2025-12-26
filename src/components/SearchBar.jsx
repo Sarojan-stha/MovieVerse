@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { MovieContext } from "../userContext/Globalvariables";
 import { useEffect } from "react";
 import axios from "axios";
-
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const options = {
@@ -35,7 +34,7 @@ const SearchBar = () => {
   const endpoint = API_BASE_URL + `/search/movie?query=spiderman`;
 
   const searchMovies = async (searchParams) => {
-    const url = `https://api.themoviedb.org/3/search/movie?query=${searchParams}&include_adult=false&language=en-US&page=1`;
+    const url = `https://api.themoviedb.org/3/search/multi?query=${searchParams}&include_adult=false&language=en-US&page=1`;
 
     console.log("api calling for fetching movies");
     console.log(API_KEY);
