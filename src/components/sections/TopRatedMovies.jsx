@@ -1,21 +1,21 @@
 import React, { useContext } from "react";
 import CircularIndeterminate from "../CircularIndeterminate";
-import useMovieStore from "../../zustandStore/useMovieStore";
 import { useEffect } from "react";
+import useMovieStore from "../../zustandStore/useMovieStore";
 import { SectionSwiper } from "./section-sliders";
-const TrendingMovies = () => {
-  const { trending, setTrending, fetchMovies, isLoading, errorMsg } =
+const TopRatedMovies = () => {
+  const { topRated, setTopRated, fetchMovies, isLoading, errorMsg } =
     useMovieStore();
-  const url = "https://api.themoviedb.org/3/trending/movie/day?language=en-US";
+  const url =
+    "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1";
 
   useEffect(() => {
-    fetchMovies(url, "trending");
+    fetchMovies(url, "topRated");
   }, []);
-
   return (
     <div className="border">
       <div className="flex flex-row justify-between">
-        <div>Trending Movies</div>
+        <div>Top Rated Movies</div>
         <button>Load more</button>
       </div>
       {isLoading ? (
@@ -24,11 +24,11 @@ const TrendingMovies = () => {
         <p className="text-red-600">{errorMsg}</p>
       ) : (
         <div>
-          <SectionSwiper type={trending} />
+          <SectionSwiper type={topRated} />
         </div>
       )}
     </div>
   );
 };
 
-export default TrendingMovies;
+export default TopRatedMovies;
