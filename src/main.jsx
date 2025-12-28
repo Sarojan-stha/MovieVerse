@@ -4,12 +4,13 @@ import "./index.css";
 import "./App.css";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/free-mode";
 import App from "./App.jsx";
-import Globalvariables from "./userContext/Globalvariables.jsx";
+import { BrowserRouter } from "react-router-dom";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Globalvariables>
+    <BrowserRouter>
       <App />
-    </Globalvariables>
+    </BrowserRouter>
   </StrictMode>
 );
