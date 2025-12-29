@@ -1,9 +1,7 @@
 import React from "react";
-import { useContext } from "react";
-import { MovieContext } from "../userContext/Globalvariables";
-import { useEffect } from "react";
+import useMovieStore from "../zustandStore/useMovieStore";
 import axios from "axios";
-const API_BASE_URL = "https://api.themoviedb.org/3";
+import { useNavigate } from "react-router-dom";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const options = {
   method: "GET",
@@ -13,25 +11,16 @@ const options = {
   },
 };
 
-// const options = {
-//   method: "GET",
-//   headers: {
-//     accept: "application/json",
-//     Authorization:
-//       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4NWE1OGZhZDM2M2VmOTFmNmUxYTI3ZmU1MmQyN2NlZCIsIm5iZiI6MTc2NTczMTcwNS45ODMsInN1YiI6IjY5M2VlZDc5MDliMDQzNDA1MTYxYTM4ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.or99z9P29k0q_-wH4fGTHJAdUxxbG1mDoW_oW3eFlVc",
-//   },
-// };
-
 const SearchBar = () => {
+  const navigate = useNavigate();
   const {
     isLoading,
     setIsLoading,
-    setMovies,
-    movies,
+    setSearchResults,
+    searchResults,
     searchParams,
     setSearchParams,
-  } = useContext(MovieContext);
-  const endpoint = API_BASE_URL + `/search/movie?query=spiderman`;
+  } = useMovieStore();
 
   const searchMovies = async (searchParams) => {
     const url = `https://api.themoviedb.org/3/search/multi?query=${searchParams}&include_adult=false&language=en-US&page=1`;
@@ -44,7 +33,8 @@ const SearchBar = () => {
       console.log(searchParams);
       const response = await axios.get(url, options);
       console.log(response.data.results);
-      setMovies(response.data.results);
+      setSearchResults(response.data.results);
+      navigate("/search");
     } catch (error) {
       console.log(error);
     } finally {
