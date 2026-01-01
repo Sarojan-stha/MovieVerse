@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ModalTrailer from "../ModalTrailer";
 import useMovieStore from "../../zustandStore/useMovieStore";
 import axios from "axios";
@@ -19,14 +20,18 @@ const options = {
 };
 
 const HeroSlide = () => {
+  const navigate = useNavigate();
   const { setVideoKey, fetchVideoKey } = useMovieStore();
   const [nowPlayingMovies, setnowPlayingMovies] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [activeMovie, setActiveMovie] = useState(null);
+  const handleWatchNow = (movieId) => {
+    navigate(`/movie/${movieId}`);
+  };
+
   const fetchnowPlayingMovies = async () => {
     try {
       const response = await axios.get(url, options);
-      console.log(response.data);
       const { data } = response;
       setnowPlayingMovies(data.results);
     } catch (error) {
@@ -47,7 +52,7 @@ const HeroSlide = () => {
       pagination={true}
       slidesPerView={1}
       loop={true}
-      onSlideChange={() => console.log("slide change")}
+      // onSlideChange={() => console.log("slide change")}
     >
       {nowPlayingMovies
         .slice(0, 12)
@@ -64,7 +69,10 @@ const HeroSlide = () => {
                   <h1>{title}</h1>
                   <p className="font-semibold text-justify">{overview}</p>
                   <div className="buttons">
-                    <button className=" hover:bg-red-700 active:bg-red-800">
+                    <button
+                      className=" hover:bg-red-700 active:bg-red-800"
+                      onClick={() => handleWatchNow(id)}
+                    >
                       Watch now
                     </button>
                     <button
