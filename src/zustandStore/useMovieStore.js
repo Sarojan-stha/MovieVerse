@@ -10,7 +10,7 @@ const options = {
 };
 const useMovieStore = create((set) => ({
   errorMsg: "",
-  movies: [],
+  movie: null,
   trending: [],
   topRated: [],
   tvShows: [],
@@ -18,10 +18,11 @@ const useMovieStore = create((set) => ({
   searchParams: "",
   searchResults: [],
   videoKey: "",
+  casts: [],
 
   // Setters (replacing setState)
   setErrorMsg: (msg) => set({ errorMsg: msg }),
-  setMovies: (movies) => set({ movies }),
+  setMovie: (movie) => set({ movie }),
   setTrending: (movies) => set({ trending: movies }),
   setTopRated: (movies) => set({ topRated: movies }),
   setTvShows: (movies) => set({ tvShows: movies }),
@@ -29,13 +30,14 @@ const useMovieStore = create((set) => ({
   setSearchParams: (value) => set({ searchParams: value }),
   setSearchResults: (value) => set({ searchResults: value }),
   setVideoKey: (value) => set({ videoKey: value }),
+  setCasts: (value) => set({ casts: value }),
 
   fetchMovies: async (url, type) => {
     set({ isLoading: true });
     try {
       const response = await axios.get(url, options);
       const { data } = response;
-      console.log(data);
+      console.log("movies", data);
       switch (type) {
         case "trending":
           set({ trending: data.results });
