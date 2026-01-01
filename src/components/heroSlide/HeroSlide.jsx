@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { useState } from "react";
+import ModalTrailer from "../ModalTrailer";
+import useMovieStore from "../../zustandStore/useMovieStore";
 import axios from "axios";
 import "./heroSlide.css";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -17,20 +19,22 @@ const options = {
 };
 
 const HeroSlide = () => {
-  const [trendingMovies, settrendingMovies] = useState([]);
-
-  const fetchTrendingMovies = async () => {
+  const { setVideoKey, fetchVideoKey } = useMovieStore();
+  const [nowPlayingMovies, setnowPlayingMovies] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [activeMovie, setActiveMovie] = useState(null);
+  const fetchnowPlayingMovies = async () => {
     try {
       const response = await axios.get(url, options);
       console.log(response.data);
       const { data } = response;
-      settrendingMovies(data.results);
+      setnowPlayingMovies(data.results);
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
-    fetchTrendingMovies();
+    fetchnowPlayingMovies();
   }, []);
   return (
     <Swiper
@@ -40,14 +44,15 @@ const HeroSlide = () => {
         delay: 5000,
         disableOnInteraction: true,
       }}
+      pagination={true}
       slidesPerView={1}
       loop={true}
       onSlideChange={() => console.log("slide change")}
     >
-      {trendingMovies
+      {nowPlayingMovies
         .slice(0, 12)
         .map(({ id, title, overview, backdrop_path, poster_path }) => (
-          <SwiperSlide>
+          <SwiperSlide key={id}>
             <div
               className="h-lvh w-vw bg-cover flex items-center justify-center "
               style={{
@@ -62,8 +67,16 @@ const HeroSlide = () => {
                     <button className=" hover:bg-red-700 active:bg-red-800">
                       Watch now
                     </button>
-                    <button className="hover:bg-white hover:text-red-700  active:bg-amber-50 active:text-red-700">
-                      Watch trailer{" "}
+                    <button
+                      onClick={() => {
+                        setActiveMovie(id);
+                        setShowModal(true);
+                        fetchVideoKey(id);
+                        // document.body.style.overflow = "hidden";
+                      }}
+                      className="hover:bg-white hover:text-red-700  active:bg-amber-50 active:text-red-700"
+                    >
+                      Watch trailer
                     </button>
                   </div>
                 </div>
@@ -78,6 +91,7 @@ const HeroSlide = () => {
             </div>
           </SwiperSlide>
         ))}
+      <ModalTrailer showModal={showModal} close={() => setShowModal(false)} />
     </Swiper>
   );
 };

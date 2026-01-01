@@ -13,7 +13,7 @@ export const SectionSwiper = ({ type }) => {
     >
       {type.length > 0 ? (
         type.map((movie) => (
-          <SwiperSlide>
+          <SwiperSlide key={movie.id}>
             <MovieCard key={movie.id} movie={movie} />
           </SwiperSlide>
         ))

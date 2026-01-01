@@ -16,6 +16,8 @@ const useMovieStore = create((set) => ({
   tvShows: [],
   isLoading: false,
   searchParams: "",
+  searchResults: [],
+  videoKey: "",
 
   // Setters (replacing setState)
   setErrorMsg: (msg) => set({ errorMsg: msg }),
@@ -25,6 +27,8 @@ const useMovieStore = create((set) => ({
   setTvShows: (movies) => set({ tvShows: movies }),
   setIsLoading: (value) => set({ isLoading: value }),
   setSearchParams: (value) => set({ searchParams: value }),
+  setSearchResults: (value) => set({ searchResults: value }),
+  setVideoKey: (value) => set({ videoKey: value }),
 
   fetchMovies: async (url, type) => {
     set({ isLoading: true });
@@ -58,6 +62,27 @@ const useMovieStore = create((set) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  fetchVideoKey: async (movieId) => {
+    const res = await axios.get(
+      `https://api.themoviedb.org/3/movie/${movieId}/videos`,
+      options
+    );
+    const trailer = res.data.results.find(
+      (v) => v.site === "YouTube" && v.type.includes("Trailer")
+    );
+    // res.data.results.find(
+    //   (v) => v.site === "YouTube" && v.type === "Teaser"
+    // ) ||
+    // res.data.results.find((v) => v.site === "YouTube");
+
+    if (trailer) {
+      console.log("trailer key is :", trailer.key);
+
+      set({ videoKey: trailer.key });
+    }
+    console.log("res.data", res.data);
   },
 }));
 export default useMovieStore;
