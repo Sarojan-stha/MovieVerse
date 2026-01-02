@@ -18,11 +18,7 @@ const MovieCard = ({
   return (
     <div
       className="border cursor-pointer"
-      onClick={() =>
-        media_type === "tv"
-          ? navigate(`/tvShow/${id}`)
-          : navigate(`/movie/${id}`)
-      }
+      onClick={() => navigate(`/${media_type}/${id}`)}
     >
       <div className="border h-full">
         <img

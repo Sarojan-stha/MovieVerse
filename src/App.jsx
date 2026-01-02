@@ -3,14 +3,14 @@ import Home from "../pages/Home";
 import Search from "../pages/Search";
 import MovieDetails from "../pages/MovieDetails";
 import TvShowDetails from "../pages/TvShowDetails";
+import Details from "../pages/Details";
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/search" element={<Search />} />
-      <Route path="/movie/:id" element={<MovieDetails />} />
-      <Route path="/tvshow/:id" element={<TvShowDetails />} />
+      <Route path="/:type/:id" element={<Details />} />
     </Routes>
   );
 };

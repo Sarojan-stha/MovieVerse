@@ -10,7 +10,7 @@ const options = {
 };
 const useMovieStore = create((set) => ({
   errorMsg: "",
-  movie: null,
+  media: null,
   trending: [],
   topRated: [],
   tvShows: [],
@@ -22,7 +22,7 @@ const useMovieStore = create((set) => ({
 
   // Setters (replacing setState)
   setErrorMsg: (msg) => set({ errorMsg: msg }),
-  setMovie: (movie) => set({ movie }),
+  setMedia: (value) => set({ media: value }),
   setTrending: (movies) => set({ trending: movies }),
   setTopRated: (movies) => set({ topRated: movies }),
   setTvShows: (movies) => set({ tvShows: movies }),
