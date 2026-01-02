@@ -26,11 +26,9 @@ const SearchBar = () => {
     const url = `https://api.themoviedb.org/3/search/multi?query=${searchParams}&include_adult=false&language=en-US&page=1`;
 
     console.log("api calling for fetching movies");
-    console.log(API_KEY);
     setIsLoading(true);
 
     try {
-      console.log(searchParams);
       const response = await axios.get(url, options);
       console.log(response.data.results);
       setSearchResults(response.data.results);

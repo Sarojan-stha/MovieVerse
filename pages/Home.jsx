@@ -1,5 +1,5 @@
 import React from "react";
-import { Header } from "../src/components/Header";
+import { Navbar } from "../src/components/Navbar";
 import HeroSlide from "../src/components/heroSlide/HeroSlide";
 import SearchBar from "../src/components/SearchBar";
 import TrendingMovies from "../src/components/sections/TrendingMovies";
@@ -8,7 +8,7 @@ import TvShows from "../src/components/sections/TvShows";
 const Home = () => {
   return (
     <main>
-      <Header />
+      <Navbar />
       <HeroSlide />
       <section>
         <SearchBar />

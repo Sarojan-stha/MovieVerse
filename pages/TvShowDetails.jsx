@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import useMovieStore from "../src/zustandStore/useMovieStore";
+import { Navbar } from "../src/components/Navbar";
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -15,13 +16,13 @@ const options = {
   },
 };
 
-const MovieDetails = () => {
+const TvShowDetails = () => {
   const { casts, setCasts, movie, setMovie } = useMovieStore();
   const { id } = useParams();
   const getCasts = async (movie_id) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}/movie/${movie_id}/credits`,
+        `${BASE_URL}/tv/${movie_id}/credits`,
         options
       );
       const actors = res.data.cast;
@@ -32,7 +33,7 @@ const MovieDetails = () => {
   };
   const getMovieDetails = async (movie_id) => {
     try {
-      const res = await axios.get(`${BASE_URL}/movie/${movie_id}`, options);
+      const res = await axios.get(`${BASE_URL}/tv/${movie_id}`, options);
       console.log("details", res.data);
       setMovie(res.data);
     } catch (err) {
@@ -49,6 +50,7 @@ const MovieDetails = () => {
 
   return (
     <div className="">
+      <Navbar />
       <div className="container">
         <div
           className="h-lvh w-vw bg-cover flex items-center justify-center "
@@ -65,7 +67,7 @@ const MovieDetails = () => {
               />
             </div>
             <div className="movie-details h-50 w-lg flex flex-col  gap-1.5 ">
-              <h1>{movie.title}</h1>
+              <h1>{movie.name}</h1>
               <div className="flex flex-row">
                 {movie.genres.map((m) => (
                   <button>{m.name}</button>
@@ -93,4 +95,4 @@ const MovieDetails = () => {
   );
 };
 
-export default MovieDetails;
+export default TvShowDetails;

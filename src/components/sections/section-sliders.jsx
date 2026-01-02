@@ -1,9 +1,12 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, FreeMode } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
+
 import MovieCard from "../MovieCard";
 
 export const SectionSwiper = ({ type }) => {
+  const navigate = useNavigate();
   return (
     <Swiper
       modules={[FreeMode, Pagination]}

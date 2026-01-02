@@ -1,7 +1,7 @@
 import React from "react";
 import useMovieStore from "../src/zustandStore/useMovieStore";
 import MovieCard from "../src/components/MovieCard";
-import { Header } from "../src/components/Header";
+import { Navbar } from "../src/components/Navbar";
 
 const Search = () => {
   const { isLoading, setIsLoading, searchResults, setSearchResults } =
@@ -10,7 +10,7 @@ const Search = () => {
 
   return (
     <div>
-      <Header />
+      <Navbar />
       <div className="grid grid-cols-5 gap-2">
         {searchResults.map((movie) => {
           return (
