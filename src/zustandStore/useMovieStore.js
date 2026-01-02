@@ -19,6 +19,7 @@ const useMovieStore = create((set) => ({
   searchResults: [],
   videoKey: "",
   casts: [],
+  trailers: [],
 
   // Setters (replacing setState)
   setErrorMsg: (msg) => set({ errorMsg: msg }),
@@ -31,6 +32,7 @@ const useMovieStore = create((set) => ({
   setSearchResults: (value) => set({ searchResults: value }),
   setVideoKey: (value) => set({ videoKey: value }),
   setCasts: (value) => set({ casts: value }),
+  setTrailers: (value) => set({ trailers: value }),
 
   fetchMovies: async (url, type) => {
     set({ isLoading: true });
@@ -74,10 +76,6 @@ const useMovieStore = create((set) => ({
     const trailer = res.data.results.find(
       (v) => v.site === "YouTube" && v.type.includes("Trailer")
     );
-    // res.data.results.find(
-    //   (v) => v.site === "YouTube" && v.type === "Teaser"
-    // ) ||
-    // res.data.results.find((v) => v.site === "YouTube");
 
     if (trailer) {
       console.log("trailer key is :", trailer.key);

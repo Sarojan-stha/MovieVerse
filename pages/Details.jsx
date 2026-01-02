@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { Navbar } from "../src/components/Navbar";
 import useMovieStore from "../src/zustandStore/useMovieStore";
+import Trailers from "../src/components/Trailers";
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -112,6 +113,7 @@ const Details = () => {
           </div>
         </div>
       </div>
+      <Trailers media_id={id} mediaType={mediaType} />
     </div>
   );
 };
