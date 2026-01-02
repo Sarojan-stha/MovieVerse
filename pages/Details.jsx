@@ -67,7 +67,16 @@ const Details = () => {
             backgroundImage: `url(${IMAGE_URL}/${media.backdrop_path})`,
           }}
         >
-          <div className="containeer  ">
+          <div
+            className="absolute inset-x-0 bottom-0 w-full z-0"
+            style={{
+              height: "100%",
+              background:
+                "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%)",
+            }}
+          ></div>
+
+          <div className="containeer  relative z-10 flex gap-6 ">
             <div className="h-auto w-72  ">
               <img
                 className="bg-cover w-full h-full rounded-2xl drop-shadow-[0_4px_6px_rgba(139,92,246,0.3)]"
@@ -82,7 +91,10 @@ const Details = () => {
                   <button>{m.name}</button>
                 ))}
               </div>
-              <p className="font-semibold text-justify">{media.overview}</p>
+              <p className="font-semibold text-justify text-wrap">
+                {media.overview}
+              </p>
+              <p className="font-bold ">Casts</p>
               <div className="flex flex-row gap-0.5">
                 {casts.slice(0, 5).map((cast) => {
                   return (
