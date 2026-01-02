@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const MovieCard = ({
   movie: {
@@ -9,10 +10,20 @@ const MovieCard = ({
     poster_path,
     original_language,
     release_date,
+    first_air_date,
+    media_type,
   },
 }) => {
+  const navigate = useNavigate();
   return (
-    <div className="border ">
+    <div
+      className="border cursor-pointer"
+      onClick={() =>
+        media_type === "tv"
+          ? navigate(`/tvShow/${id}`)
+          : navigate(`/movie/${id}`)
+      }
+    >
       <div className="border h-full">
         <img
           src={
@@ -24,11 +35,11 @@ const MovieCard = ({
         />
         <h3>{title}</h3>
         <img className="inline" src="/public/assets/star.svg" alt="star" />
-        <span>{vote_average.toFixed(1)}</span>
+        <span>{vote_average ? vote_average.toFixed(1) : "N/A"}</span>
         <span> • </span>
         <p>{original_language}</p>
         <span> • </span>
-        <p>{release_date.split("-")[0]}</p>
+        <p>{release_date ? release_date.split("-")[0] : "N/A"}</p>
       </div>
     </div>
   );
