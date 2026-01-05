@@ -4,12 +4,17 @@ import Search from "../pages/Search";
 import MovieDetails from "../pages/MovieDetails";
 import TvShowDetails from "../pages/TvShowDetails";
 import Details from "../pages/Details";
+import AllMedia from "../pages/AllMedia";
+import Movies from "../pages/Movies";
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/search" element={<Search />} />
+      <Route path="/:media_type/:cat/all" element={<AllMedia />} />
+      <Route path="/:type" element={<Movies />} />
+
       <Route path="/:type/:id" element={<Details />} />
     </Routes>
   );
