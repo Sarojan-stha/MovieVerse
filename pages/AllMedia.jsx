@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Navbar } from "../src/components/Navbar";
 import MovieCard from "../src/components/MovieCard";
@@ -6,44 +6,99 @@ import useMovieStore from "../src/zustandStore/useMovieStore";
 
 const AllMedia = () => {
   const { media_type, cat } = useParams();
+
   const {
     trending,
     topRated,
     tvShows,
     fetchMovies,
     trendingPage,
+    setTrendingPage,
     topRatedPage,
     tvShowsPage,
+    setTopRatedPage,
+    setTvShowsPage,
+    setCardsLimit,
   } = useMovieStore();
-  const [page, setPage] = useState(1);
 
-  console.log("media", media_type, "cat", cat);
+  // decide which list we are dealing with
+  const listKey =
+    media_type === "movie" && cat === "trending"
+      ? "trending"
+      : media_type === "movie" && cat === "topRated"
+      ? "topRated"
+      : media_type === "tv" && cat === "trending"
+      ? "tvShows"
+      : null;
 
+  // get correct media list
   const getMediaList = () => {
-    if (media_type === "movie" && cat === "trending") return trending;
-    if (media_type === "movie" && cat === "topRated") return topRated;
-    if (media_type === "tv" && cat === "trending") return tvShows;
+    if (listKey === "trending") return trending;
+    if (listKey === "topRated") return topRated;
+    if (listKey === "tvShows") return tvShows;
+
     return [];
   };
+
+  // get correct page from store
+  const getPage = () => {
+    if (listKey === "trending") return trendingPage;
+    if (listKey === "topRated") return topRatedPage;
+    if (listKey === "tvShows") return tvShowsPage;
+  };
+
+  const changePage = () => {
+    if (listKey === "trending") setTrendingPage(p);
+    if (listKey === "topRated") setTopRatedPage(p);
+    if (listKey === "tvShows") setTvShowsPage(p);
+  };
+
+  // build TMDB URL
+  let p = getPage();
   const buildUrl = () => {
-    if (media_type === "movie" && cat === "trending")
-      return `https://api.themoviedb.org/3/trending/movie/day?language=en-US&page=${page}`;
-    if (media_type === "movie" && cat === "topRated")
-      return `https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=${page}`;
-    if (media_type === "tv" && cat === "trending")
-      return `https://api.themoviedb.org/3/trending/tv/day?language=en-US&page=${page}`;
+    // const page = getPage();
+
+    if (listKey === "trending" && media_type === "movie")
+      return `https://api.themoviedb.org/3/trending/movie/day?page=${p}`;
+
+    if (listKey === "topRated")
+      return `https://api.themoviedb.org/3/movie/top_rated?page=${p}`;
+
+    if (listKey === "tvShows")
+      return `https://api.themoviedb.org/3/trending/tv/day?page=${p}`;
+
     return null;
   };
 
+  // initial load
+  useEffect(() => {
+    setCardsLimit(10);
+    console.log("list key ho hai", listKey);
+    const url = buildUrl();
+    if (url && listKey) {
+      console.log("list key", listKey);
+      const result = getMediaList();
+      console.log("result", result);
+
+      if (result && result.length === 0) fetchMovies(url, listKey);
+    }
+  }, [media_type, cat]);
+
   const mediaList = getMediaList();
   const handleLoadMore = () => {
-    setPage((prev) => prev + 1);
-    const url = buildUrl();
-    console.log("url", url);
+    console.log("loading");
+    p = p + 1;
+    changePage();
+    console.log("page", p);
 
-    fetchMovies(url, cat);
+    const url = buildUrl();
+    if (!url || !listKey) return;
+    console.log("loadmore", listKey);
+
+    fetchMovies(url, listKey);
   };
-  console.log(trending);
+
+  console.log(media_type);
 
   return (
     <div>
@@ -56,7 +111,15 @@ const AllMedia = () => {
           <p>No media found</p>
         )}
       </div>
-      <button onClick={handleLoadMore}>Load more</button>
+
+      <div className="flex justify-center p-6">
+        <button
+          onClick={handleLoadMore}
+          className="px-6 py-2 rounded bg-purple-600 text-white hover:bg-purple-700"
+        >
+          Load more
+        </button>
+      </div>
     </div>
   );
 };

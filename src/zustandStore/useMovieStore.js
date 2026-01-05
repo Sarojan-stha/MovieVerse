@@ -20,6 +20,13 @@ const useMovieStore = create((set) => ({
   videoKey: "",
   casts: [],
   trailers: [],
+  similar: [],
+  trendingPage: 1,
+  topRatedPage: 1,
+  tvShowsPage: 1,
+  similarPage: 1,
+  cardsLimit: 10,
+  favorites: [],
 
   // Setters (replacing setState)
   setErrorMsg: (msg) => set({ errorMsg: msg }),
@@ -33,28 +40,44 @@ const useMovieStore = create((set) => ({
   setVideoKey: (value) => set({ videoKey: value }),
   setCasts: (value) => set({ casts: value }),
   setTrailers: (value) => set({ trailers: value }),
+  setSimilar: (value) => set({ similar: value }),
+  setTrendingPage: (value) => set({ trendingPage: value }),
+  setTopRatedPage: (value) => set({ topRatedPage: value }),
+  setTvShowsPage: (value) => set({ trendingPage: value }),
+  setSimilarPage: (value) => set({ similarPage: value }),
+  setCardsLimit: (value) => set({ cardsLimit: value }),
+  setFavorites: (value) => set({ favorites: value }),
 
   fetchMovies: async (url, type) => {
     set({ isLoading: true });
     try {
       const response = await axios.get(url, options);
       const { data } = response;
-      console.log("movies", data);
+      const { results } = data;
       switch (type) {
         case "trending":
-          set({ trending: data.results });
+          set((state) => ({
+            trending: [...state.trending, ...results],
+          }));
+          console.log("results", results);
           break;
 
         case "topRated":
-          set({ topRated: data.results });
+          set((state) => ({
+            topRated: [...state.topRated, ...results],
+          }));
           break;
 
         case "tvShows":
-          set({ tvShows: data.results });
+          set((state) => ({
+            tvShows: [...state.tvShows, ...results],
+          }));
           break;
 
         case "movies":
-          set({ movies: data.results });
+          set((state) => ({
+            movies: [...state.movies, ...results],
+          }));
           break;
 
         default:

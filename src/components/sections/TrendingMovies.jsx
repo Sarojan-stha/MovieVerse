@@ -3,20 +3,29 @@ import CircularIndeterminate from "../CircularIndeterminate";
 import useMovieStore from "../../zustandStore/useMovieStore";
 import { useEffect } from "react";
 import { SectionSwiper } from "./section-sliders";
+import { useNavigate } from "react-router-dom";
 const TrendingMovies = () => {
-  const { trending, setTrending, fetchMovies, isLoading, errorMsg } =
-    useMovieStore();
-  const url = "https://api.themoviedb.org/3/trending/movie/day?language=en-US";
-
+  const {
+    trending,
+    setTrending,
+    fetchMovies,
+    isLoading,
+    errorMsg,
+    trendingPage,
+  } = useMovieStore();
+  const url = `https://api.themoviedb.org/3/trending/movie/day?language=en-US`;
+  const navigate = useNavigate();
   useEffect(() => {
-    fetchMovies(url, "trending");
+    if (trending && trending.length === 0) fetchMovies(url, "trending");
   }, []);
 
   return (
     <div className="border">
       <div className="flex flex-row justify-between">
         <div>Trending Movies</div>
-        <button>Load more</button>
+        <button onClick={() => navigate("/movie/trending/all")}>
+          Load more
+        </button>
       </div>
       {isLoading ? (
         <CircularIndeterminate />
