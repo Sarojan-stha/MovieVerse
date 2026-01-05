@@ -5,6 +5,7 @@ import axios from "axios";
 import { Navbar } from "../src/components/Navbar";
 import useMovieStore from "../src/zustandStore/useMovieStore";
 import Trailers from "../src/components/Trailers";
+import Similar from "../src/components/Similar";
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -18,8 +19,10 @@ const options = {
 };
 
 const Details = () => {
-  const { casts, setCasts, media, setMedia } = useMovieStore();
+  const { casts, setCasts, media, setMedia, setCardsLimit } = useMovieStore();
   const { id, type } = useParams();
+  console.log("type", type, id);
+
   const mediaType = type;
   const getCasts = async (media_id) => {
     try {
@@ -40,7 +43,7 @@ const Details = () => {
         `${BASE_URL}/${mediaType}/${media_id}`,
         options
       );
-      console.log("API Response:", res.data);
+      console.log("Details:", res.data);
       setMedia(res.data);
     } catch (err) {
       console.error(
@@ -51,9 +54,12 @@ const Details = () => {
     }
   };
   useEffect(() => {
+    setCardsLimit(10);
+
     getMediaDetails(id);
     getCasts(id);
-  }, [id]);
+    window.scrollTo(0, 0);
+  }, [id, mediaType]);
   console.log("casts", casts);
 
   if (!media) return <div>Loading</div>;
@@ -114,6 +120,7 @@ const Details = () => {
         </div>
       </div>
       <Trailers media_id={id} mediaType={mediaType} />
+      <Similar media_id={id} mediaType={mediaType} />
     </div>
   );
 };
