@@ -1,8 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import useMovieStore from "../zustandStore/useMovieStore";
+import { FaRegBookmark } from "react-icons/fa";
 
-const MovieCard = ({
-  movie: {
+const MovieCard = ({ movie }) => {
+  const {
     id,
     title,
     backdrop_path,
@@ -12,9 +14,17 @@ const MovieCard = ({
     release_date,
     first_air_date,
     media_type,
-  },
-}) => {
+  } = movie;
+  const { favorites, setFavorites } = useMovieStore();
+  if (!media_type) media_type = "movie";
   const navigate = useNavigate();
+
+  const addToFav = (event) => {
+    event.stopPropagation();
+    setFavorites([...favorites, movie]);
+    console.log("movie added", movie);
+  };
+
   return (
     <div
       className="border cursor-pointer"
@@ -36,6 +46,7 @@ const MovieCard = ({
         <p>{original_language}</p>
         <span> • </span>
         <p>{release_date ? release_date.split("-")[0] : "N/A"}</p>
+        <FaRegBookmark className="inline" onClick={addToFav} />
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ export const Navbar = () => {
       <Link to="/">Home</Link>
       <Link to="/movie/trending/all">Movies</Link>
       <Link to="/tv/trending/all">TV Shows</Link>
+      <Link to="/favorites">Favorites</Link>
 
       <SearchBar />
     </div>
