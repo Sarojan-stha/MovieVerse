@@ -2,10 +2,15 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, FreeMode } from "swiper/modules";
 import { useNavigate } from "react-router-dom";
+import useMovieStore from "../../zustandStore/useMovieStore";
 
 import MovieCard from "../MovieCard";
 
 export const SectionSwiper = ({ type }) => {
+  const { setCardsLimit, cardsLimit } = useMovieStore();
+  console.log("result of top rated ", type);
+  console.log("cardss", cardsLimit);
+
   const navigate = useNavigate();
   return (
     <Swiper
@@ -15,7 +20,7 @@ export const SectionSwiper = ({ type }) => {
       freeMode={true}
     >
       {type.length > 0 ? (
-        type.map((movie) => (
+        type.slice(0, cardsLimit).map((movie) => (
           <SwiperSlide key={movie.id}>
             <MovieCard key={movie.id} movie={movie} />
           </SwiperSlide>
