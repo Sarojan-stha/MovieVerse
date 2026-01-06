@@ -64,8 +64,12 @@ const useMovieStore = create((set) => ({
 
         case "topRated":
           set((state) => ({
-            topRated: [...state.topRated, ...results],
+            topRated: [
+              ...state.topRated,
+              ...results.map((movie) => ({ ...movie, media_type: "movie" })), //adding media_type as topRated doesnt include it
+            ],
           }));
+
           break;
 
         case "tvShows":

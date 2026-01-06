@@ -29,12 +29,7 @@ const TopRatedMovies = () => {
         <p className="text-red-600">{errorMsg}</p>
       ) : (
         <div>
-          <SectionSwiper
-            type={topRated.map((movie) => ({
-              ...movie,
-              media_type: "movie",
-            }))}
-          />
+          <SectionSwiper type={topRated} />
         </div>
       )}
     </div>

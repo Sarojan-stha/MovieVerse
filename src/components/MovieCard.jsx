@@ -16,12 +16,12 @@ const MovieCard = ({ movie }) => {
     media_type,
   } = movie;
   const { favorites, setFavorites } = useMovieStore();
-  if (!media_type) media_type = "movie";
   const navigate = useNavigate();
 
   const addToFav = (event) => {
     event.stopPropagation();
-    setFavorites([...favorites, movie]);
+    const filtered = favorites.filter((m) => m.id !== id);
+    setFavorites(filtered);
     console.log("movie added", movie);
   };
 
