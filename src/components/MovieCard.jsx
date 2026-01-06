@@ -1,8 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
-const MovieCard = ({
-  movie: {
+import useMovieStore from "../zustandStore/useMovieStore";
+import { FaRegBookmark } from "react-icons/fa";
+import { FaBookmark } from "react-icons/fa";
+import { useState } from "react";
+const MovieCard = ({ movie }) => {
+  const {
     id,
     title,
     backdrop_path,
@@ -12,17 +15,26 @@ const MovieCard = ({
     release_date,
     first_air_date,
     media_type,
-  },
-}) => {
+  } = movie;
+  const { favorites, setFavorites, setIsLoading } = useMovieStore();
   const navigate = useNavigate();
+  const [saved, setSaved] = useState(true);
+  const isFav = favorites.some((m) => m.id === id);
+
+  const addToFav = (event) => {
+    event.stopPropagation();
+
+    isFav
+      ? (setFavorites(favorites.filter((m) => m.id !== id)), setSaved(false))
+      : (setFavorites([...favorites, movie]), setSaved(true));
+
+    console.log("movie added", movie);
+  };
+
   return (
     <div
       className="border cursor-pointer"
-      onClick={() =>
-        media_type === "tv"
-          ? navigate(`/tvShow/${id}`)
-          : navigate(`/movie/${id}`)
-      }
+      onClick={() => navigate(`/${media_type}/${id}`)}
     >
       <div className="border h-full">
         <img
@@ -40,6 +52,11 @@ const MovieCard = ({
         <p>{original_language}</p>
         <span> • </span>
         <p>{release_date ? release_date.split("-")[0] : "N/A"}</p>
+        {isFav ? (
+          <FaBookmark className="inline" onClick={addToFav} />
+        ) : (
+          <FaRegBookmark className="inline" onClick={addToFav} />
+        )}
       </div>
     </div>
   );

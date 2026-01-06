@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const options = {
   method: "GET",
@@ -8,9 +10,9 @@ const options = {
     Authorization: `Bearer ${API_KEY}`,
   },
 };
-const useMovieStore = create((set) => ({
+const useMovieStore = create((set, get) => ({
   errorMsg: "",
-  movie: null,
+  media: null,
   trending: [],
   topRated: [],
   tvShows: [],
@@ -19,10 +21,19 @@ const useMovieStore = create((set) => ({
   searchResults: [],
   videoKey: "",
   casts: [],
+  trailers: [],
+  similar: [],
+  trendingPage: 1,
+  topRatedPage: 1,
+  tvShowsPage: 1,
+  similarPage: 1,
+  searchPage: 1,
+  cardsLimit: 10,
+  favorites: [],
 
   // Setters (replacing setState)
   setErrorMsg: (msg) => set({ errorMsg: msg }),
-  setMovie: (movie) => set({ movie }),
+  setMedia: (value) => set({ media: value }),
   setTrending: (movies) => set({ trending: movies }),
   setTopRated: (movies) => set({ topRated: movies }),
   setTvShows: (movies) => set({ tvShows: movies }),
@@ -31,28 +42,50 @@ const useMovieStore = create((set) => ({
   setSearchResults: (value) => set({ searchResults: value }),
   setVideoKey: (value) => set({ videoKey: value }),
   setCasts: (value) => set({ casts: value }),
+  setTrailers: (value) => set({ trailers: value }),
+  setSimilar: (value) => set({ similar: value }),
+  setTrendingPage: (value) => set({ trendingPage: value }),
+  setTopRatedPage: (value) => set({ topRatedPage: value }),
+  setTvShowsPage: (value) => set({ trendingPage: value }),
+  setSimilarPage: (value) => set({ similarPage: value }),
+  setSearchPage: (value) => set({ searchPage: value }),
+  setCardsLimit: (value) => set({ cardsLimit: value }),
+  setFavorites: (value) => set({ favorites: value }),
 
   fetchMovies: async (url, type) => {
     set({ isLoading: true });
     try {
       const response = await axios.get(url, options);
       const { data } = response;
-      console.log("movies", data);
+      const { results } = data;
       switch (type) {
         case "trending":
-          set({ trending: data.results });
+          set((state) => ({
+            trending: [...state.trending, ...results],
+          }));
+          console.log("results", results);
           break;
 
         case "topRated":
-          set({ topRated: data.results });
+          set((state) => ({
+            topRated: [
+              ...state.topRated,
+              ...results.map((movie) => ({ ...movie, media_type: "movie" })), //adding media_type as topRated doesnt include it
+            ],
+          }));
+
           break;
 
         case "tvShows":
-          set({ tvShows: data.results });
+          set((state) => ({
+            tvShows: [...state.tvShows, ...results],
+          }));
           break;
 
         case "movies":
-          set({ movies: data.results });
+          set((state) => ({
+            movies: [...state.movies, ...results],
+          }));
           break;
 
         default:
@@ -66,6 +99,26 @@ const useMovieStore = create((set) => ({
     }
   },
 
+  searchMovies: async (searchParams) => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/search/multi?query=${searchParams}&include_adult=false&language=en-US&page=${
+          get().searchPage
+        }`,
+        options
+      );
+      set((state) => ({
+        searchResults: [...state.searchResults, ...response.data.results],
+      }));
+    } catch (error) {
+      set({ errorMsg: "Unable to search movies. Please try again later :(" });
+      console.log(error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
   fetchVideoKey: async (movieId) => {
     const res = await axios.get(
       `https://api.themoviedb.org/3/movie/${movieId}/videos`,
@@ -74,10 +127,6 @@ const useMovieStore = create((set) => ({
     const trailer = res.data.results.find(
       (v) => v.site === "YouTube" && v.type.includes("Trailer")
     );
-    // res.data.results.find(
-    //   (v) => v.site === "YouTube" && v.type === "Teaser"
-    // ) ||
-    // res.data.results.find((v) => v.site === "YouTube");
 
     if (trailer) {
       console.log("trailer key is :", trailer.key);

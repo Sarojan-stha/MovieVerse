@@ -20,25 +20,10 @@ const SearchBar = () => {
     searchResults,
     searchParams,
     setSearchParams,
+    searchPage,
+    setSearchPage,
+    searchMovies,
   } = useMovieStore();
-
-  const searchMovies = async (searchParams) => {
-    const url = `https://api.themoviedb.org/3/search/multi?query=${searchParams}&include_adult=false&language=en-US&page=1`;
-
-    console.log("api calling for fetching movies");
-    setIsLoading(true);
-
-    try {
-      const response = await axios.get(url, options);
-      console.log(response.data.results);
-      setSearchResults(response.data.results);
-      navigate("/search");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div>
@@ -54,7 +39,10 @@ const SearchBar = () => {
       <button
         type="button"
         className="border cursor-pointer"
-        onClick={() => searchMovies(searchParams)}
+        onClick={() => {
+          searchMovies(searchParams);
+          navigate("/search");
+        }}
       >
         Search
       </button>
