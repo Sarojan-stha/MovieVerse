@@ -2,7 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import useMovieStore from "../zustandStore/useMovieStore";
 import { FaRegBookmark } from "react-icons/fa";
-
+import { FaBookmark } from "react-icons/fa";
+import { useState } from "react";
 const MovieCard = ({ movie }) => {
   const {
     id,
@@ -15,13 +16,18 @@ const MovieCard = ({ movie }) => {
     first_air_date,
     media_type,
   } = movie;
-  const { favorites, setFavorites } = useMovieStore();
+  const { favorites, setFavorites, setIsLoading } = useMovieStore();
   const navigate = useNavigate();
+  const [saved, setSaved] = useState(true);
+  const isFav = favorites.some((m) => m.id === id);
 
   const addToFav = (event) => {
     event.stopPropagation();
-    const filtered = favorites.filter((m) => m.id !== id);
-    setFavorites(filtered);
+
+    isFav
+      ? (setFavorites(favorites.filter((m) => m.id !== id)), setSaved(false))
+      : (setFavorites([...favorites, movie]), setSaved(true));
+
     console.log("movie added", movie);
   };
 
@@ -46,7 +52,11 @@ const MovieCard = ({ movie }) => {
         <p>{original_language}</p>
         <span> • </span>
         <p>{release_date ? release_date.split("-")[0] : "N/A"}</p>
-        <FaRegBookmark className="inline" onClick={addToFav} />
+        {isFav ? (
+          <FaBookmark className="inline" onClick={addToFav} />
+        ) : (
+          <FaRegBookmark className="inline" onClick={addToFav} />
+        )}
       </div>
     </div>
   );
