@@ -26,6 +26,7 @@ const TvShows = () => {
         <p className="text-red-600">{errorMsg}</p>
       ) : (
         <div>
+          {console.log("tv", tvShows)}
           <SectionSwiper type={tvShows} />
         </div>
       )}

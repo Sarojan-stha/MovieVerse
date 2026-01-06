@@ -54,7 +54,6 @@ const Similar = ({ media_id, mediaType }) => {
   useEffect(() => {
     getSimilar(media_id, mediaType);
   }, [media_id]);
-  console.log("similar", similar);
 
   return (
     <div className="border rounded-2xl">

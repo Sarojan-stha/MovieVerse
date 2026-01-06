@@ -8,14 +8,12 @@ import MovieCard from "../MovieCard";
 
 export const SectionSwiper = ({ type }) => {
   const { setCardsLimit, cardsLimit } = useMovieStore();
-  console.log("result of top rated ", type);
-  console.log("cardss", cardsLimit);
 
   const navigate = useNavigate();
   return (
     <Swiper
       modules={[FreeMode, Pagination]}
-      slidesPerView={"4"}
+      slidesPerView={"4.5"}
       spaceBetween={30}
       freeMode={true}
     >

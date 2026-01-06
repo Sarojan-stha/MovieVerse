@@ -19,6 +19,8 @@ const AllMedia = () => {
     setTopRatedPage,
     setTvShowsPage,
     setCardsLimit,
+    isLoading,
+    setIsLoading,
   } = useMovieStore();
 
   // decide which list we are dealing with
@@ -104,22 +106,45 @@ const AllMedia = () => {
     <div>
       <Navbar />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
-        {mediaList.length > 0 ? (
-          mediaList.map((media) => <MovieCard key={media.id} movie={media} />)
-        ) : (
-          <p>No media found</p>
-        )}
-      </div>
+      {/* Full-page loader for the first fetch */}
+      {mediaList.length === 0 && isLoading ? (
+        <div className="flex justify-center items-center h-96">
+          <p>Loading...</p>
+        </div>
+      ) : (
+        <>
+          {/* Movie grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
+            {mediaList.length > 0 ? (
+              mediaList.map((media) => (
+                <MovieCard key={media.id} movie={media} />
+              ))
+            ) : (
+              <p>No media found</p>
+            )}
+          </div>
 
-      <div className="flex justify-center p-6">
-        <button
-          onClick={handleLoadMore}
-          className="px-6 py-2 rounded bg-purple-600 text-white hover:bg-purple-700"
-        >
-          Load more
-        </button>
-      </div>
+          {/* Small loader at bottom for Load More */}
+          {mediaList.length > 0 && isLoading && (
+            <div className="flex justify-center p-4">
+              <p>Loading more...</p>
+            </div>
+          )}
+
+          {/* Load More button only if there are movies */}
+          {mediaList.length > 0 && (
+            <div className="flex justify-center p-6">
+              <button
+                onClick={handleLoadMore}
+                className="px-6 py-2 rounded bg-purple-600 text-white hover:bg-purple-700"
+                disabled={isLoading} // prevent double clicks while loading
+              >
+                Load more
+              </button>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };

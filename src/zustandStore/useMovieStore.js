@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const options = {
   method: "GET",
@@ -8,7 +10,7 @@ const options = {
     Authorization: `Bearer ${API_KEY}`,
   },
 };
-const useMovieStore = create((set) => ({
+const useMovieStore = create((set, get) => ({
   errorMsg: "",
   media: null,
   trending: [],
@@ -25,6 +27,7 @@ const useMovieStore = create((set) => ({
   topRatedPage: 1,
   tvShowsPage: 1,
   similarPage: 1,
+  searchPage: 1,
   cardsLimit: 10,
   favorites: [],
 
@@ -45,6 +48,7 @@ const useMovieStore = create((set) => ({
   setTopRatedPage: (value) => set({ topRatedPage: value }),
   setTvShowsPage: (value) => set({ trendingPage: value }),
   setSimilarPage: (value) => set({ similarPage: value }),
+  setSearchPage: (value) => set({ searchPage: value }),
   setCardsLimit: (value) => set({ cardsLimit: value }),
   setFavorites: (value) => set({ favorites: value }),
 
@@ -90,6 +94,26 @@ const useMovieStore = create((set) => ({
     } catch (error) {
       set({ errorMsg: "Unable to fetch movies. Please try again later :(" });
       console.error(error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  searchMovies: async (searchParams) => {
+    set({ isLoading: true });
+    try {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/search/multi?query=${searchParams}&include_adult=false&language=en-US&page=${
+          get().searchPage
+        }`,
+        options
+      );
+      set((state) => ({
+        searchResults: [...state.searchResults, ...response.data.results],
+      }));
+    } catch (error) {
+      set({ errorMsg: "Unable to search movies. Please try again later :(" });
+      console.log(error);
     } finally {
       set({ isLoading: false });
     }

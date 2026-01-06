@@ -30,8 +30,7 @@ const Trailers = ({ media_id, mediaType }) => {
 
   useEffect(() => {
     getTrailers(media_id, mediaType);
-  }, []);
-  console.log("traiilers", trailers);
+  }, [media_id]);
 
   return (
     <div className="flex flex-col justify-center items-center gap-20">

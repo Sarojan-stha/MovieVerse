@@ -19,9 +19,16 @@ const options = {
 };
 
 const Details = () => {
-  const { casts, setCasts, media, setMedia, setCardsLimit } = useMovieStore();
+  const {
+    casts,
+    setCasts,
+    media,
+    setMedia,
+    setCardsLimit,
+    isLoading,
+    setIsLoading,
+  } = useMovieStore();
   const { id, type } = useParams();
-  console.log("type", type, id);
 
   const mediaType = type;
   const getCasts = async (media_id) => {
@@ -38,12 +45,10 @@ const Details = () => {
   };
   const getMediaDetails = async (media_id) => {
     try {
-      console.log("Fetching media for ID:", media_id);
       const res = await axios.get(
         `${BASE_URL}/${mediaType}/${media_id}`,
         options
       );
-      console.log("Details:", res.data);
       setMedia(res.data);
     } catch (err) {
       console.error(
@@ -59,12 +64,14 @@ const Details = () => {
     getMediaDetails(id);
     getCasts(id);
     window.scrollTo(0, 0);
-  }, [id, mediaType]);
-  console.log("casts", casts);
+  }, [id]);
 
+  // [id, mediaType]
   if (!media) return <div>Loading</div>;
 
-  return (
+  return isLoading ? (
+    <p>is loading </p>
+  ) : (
     <div className="">
       <Navbar />
       <div className="container">
