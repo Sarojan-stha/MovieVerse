@@ -23,6 +23,7 @@ const SearchBar = () => {
     searchPage,
     setSearchPage,
     searchMovies,
+    setLoadMore,
   } = useMovieStore();
 
   return (
@@ -40,6 +41,7 @@ const SearchBar = () => {
         type="button"
         className="border cursor-pointer"
         onClick={() => {
+          setLoadMore(false);
           searchMovies(searchParams);
           navigate("/search");
         }}

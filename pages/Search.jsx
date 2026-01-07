@@ -14,11 +14,14 @@ const Search = () => {
     setSearchPage,
     searchMovies,
     searchParams,
+    setLoadMore,
   } = useMovieStore();
   console.log(searchResults);
 
   let p = searchPage;
+
   const handleLoadMore = () => {
+    setLoadMore(true);
     p = p + 1;
     setSearchPage(p);
     console.log("page", searchPage);
@@ -29,19 +32,18 @@ const Search = () => {
     <div>
       <Navbar />
 
-      {isLoading ? (
+      {searchResults.length === 0 && isLoading ? (
         <p>Loading</p>
       ) : (
         <div>
           <div className="grid grid-cols-5 gap-2">
-            {searchResults.length > 0 &&
-              searchResults.map((movie) => {
-                return (
-                  <div className="">
-                    <MovieCard movie={movie} />
-                  </div>
-                );
-              })}
+            {searchResults.map((movie) => {
+              return (
+                <div className="">
+                  <MovieCard movie={movie} />
+                </div>
+              );
+            })}
           </div>
           {searchResults.length > 0 && (
             <button onClick={handleLoadMore}>Load more</button>

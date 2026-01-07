@@ -30,6 +30,7 @@ const useMovieStore = create((set, get) => ({
   searchPage: 1,
   cardsLimit: 10,
   favorites: [],
+  loadMore: false,
 
   // Setters (replacing setState)
   setErrorMsg: (msg) => set({ errorMsg: msg }),
@@ -51,6 +52,7 @@ const useMovieStore = create((set, get) => ({
   setSearchPage: (value) => set({ searchPage: value }),
   setCardsLimit: (value) => set({ cardsLimit: value }),
   setFavorites: (value) => set({ favorites: value }),
+  setLoadMore: (value) => set({ loadMore: value }),
 
   fetchMovies: async (url, type) => {
     set({ isLoading: true });
@@ -108,9 +110,11 @@ const useMovieStore = create((set, get) => ({
         }`,
         options
       );
-      set((state) => ({
-        searchResults: [...state.searchResults, ...response.data.results],
-      }));
+      get().loadMore
+        ? set((state) => ({
+            searchResults: [...state.searchResults, ...response.data.results],
+          }))
+        : set({ searchResults: response.data.results });
     } catch (error) {
       set({ errorMsg: "Unable to search movies. Please try again later :(" });
       console.log(error);
